@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+ul {
+    list-style: none;
+}
+a {text-decoration: none;color:black;}
+body {
+    background-color: #c49685;
+}
+.tc {text-align: center;}
+
+.wrap {
+    width:100%;max-width: 1000px; margin: 0 auto;padding: 0 1rem;
+}
+.wrapform {
+    width:100%;max-width: 500px; margin: 0 auto;padding: 0 1rem;
+}
+input,textarea,select {
+    width: 100%;padding: .5rem;
+    margin-bottom: .5rem;
+}
+label {display:block;}
+textarea {
+    resize: none;
+    min-height: 100px;
+}
+.error {color:red;font-size: .8rem;}
+
+header {
+    background-color: gainsboro;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+header nav ul {text-align: center}
+header nav ul li {display: inline-block;margin: 0 10px;}
+
+#mesreves {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+#mesreves .one_reve {
+    width: 31%;
+    padding: 1rem;
+    border: 1px solid #9D9D9D;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+#allUsers, #allUsers tbody,#allUsers tr{
+    min-width: 100%;
+}
