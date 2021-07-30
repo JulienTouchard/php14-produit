@@ -1,8 +1,8 @@
 <?php
-require('../../vendor/autoload.php');
-use \Gumlet\ImageResize;
 require('func.php');
 require('pdo.php');
+require('../../vendor/autoload.php');
+use \Gumlet\ImageResize;
 
 if (!empty($_POST['submitted'])) {
     $errors = [];
@@ -76,22 +76,51 @@ if (!empty($_POST['submitted'])) {
         $query->bindValue(':pwd', $pwd, PDO::PARAM_STR);
         $query->bindValue(':name', $_POST['name'], PDO::PARAM_STR);
         $query->bindValue(':avatar', $newImgName.".webp", PDO::PARAM_STR);
-
         $query->execute();
 
-        if (!is_dir("../asset/upload")) {
-            mkdir("../asset/upload");
+
+        imageManager( 
+            $_FILES['avatar'],
+            "../asset/",
+            300,
+            50,
+            "avatar",
+            new ImageResize("../asset/upload/" . $_FILES['avatar']['name'])
+        );
+        /* // Je prépare une fonction qui sera répétée dans Update mais aussi pour
+        // créer les images de mes produits
+        // les paramêtres utiles à ma function :
+        $files = $_FILES['avatar'];
+        $assetsUrl = "../asset/";
+        $widthMax = 300;
+        $widthMin = 50;
+        $entity = "avatar";
+
+        // la logique de ma fonction
+        $newImgName = explode(".",$files['name']);
+        $newImgName = $newImgName[0];
+        if (!is_dir($assetsUrl."upload")) {
+            mkdir($assetsUrl."upload");
         }
-        move_uploaded_file($_FILES['avatar']['tmp_name'], "../asset/upload/" . $_FILES['avatar']['name']);
+        move_uploaded_file($files['tmp_name'], $assetsUrl."upload/" . $files['name']);
         // pour redimensionner mon image j'utilise mon bundle gumlet/php-image-resize
-        $image = new ImageResize("../asset/upload/" . $_FILES['avatar']['name']);
-        $image->resizeToWidth(300);
+        $image = new ImageResize($assetsUrl."upload/" . $files['name']);
+        $image->resizeToWidth($widthMax);
         // Comment récupérer le nom de l'image sans l'extension que je veux modifier (webp)
         // récupeer une image avatar de 300px de large max
-        $image->save('../asset/img/avatar/'.$newImgName.".webp", IMAGETYPE_WEBP);
+        $image->save($assetsUrl."img/$entity/".$newImgName.".webp", IMAGETYPE_WEBP);
+        // opération suivante  : la meme chose mais avec une miniature de 50px de width
+        // uploadée dans le dossier thumbnail
+        $image->resizeToWidth($widthMin);
+        $image->save($assetsUrl."img/$entity/thumbnail/".$newImgName.".webp", IMAGETYPE_WEBP);
+        // dernière étape  : supprimer l'image originale d'uplaod devenue inutile
+        unlink($assetsUrl."upload/" . $files['name']);
+        // fin de ma function 
+        // je teste avant d'en faire une fonction */
+        
         // tout c'est bien passé
         $_SESSION['name'] = $_POST['name'];
-        $_SESSION['avatar'] = "./asset/upload/" . $_FILES['avatar']['name'];
+        $_SESSION['avatar'] = $newImgName.".webp";
         $_SESSION['role'] = 'ROLE_USER';
 
         header("Location: ../index.php");

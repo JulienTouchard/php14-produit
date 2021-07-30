@@ -48,4 +48,38 @@ function viewError($errors,$key) {
 // gestion des failles xss
 function xss($value){
     return trim(strip_tags($value));
-} 
+}
+
+// gestion des images 
+function imageManager( $files,$assetsUrl,$widthMax,$widthMin,$entity,$image){
+
+// Je prépare une fonction qui sera répétée dans Update mais aussi pour
+        // créer les images de mes produits
+        // les paramêtres utiles à ma function :
+        /* $files = $_FILES['avatar'];
+        $assetsUrl = "../asset/";
+        $widthMax = 300;
+        $widthMin = 50;
+        $entity = "avatar"; */
+        
+        // la logique de ma fonction
+        $newImgName = explode(".",$files['name']);
+        $newImgName = $newImgName[0];
+        if (!is_dir($assetsUrl."upload")) {
+            mkdir($assetsUrl."upload");
+        }
+        move_uploaded_file($files['tmp_name'], $assetsUrl."upload/" . $files['name']);
+        // pour redimensionner mon image j'utilise mon bundle gumlet/php-image-resize
+        $image->resizeToWidth($widthMax);
+        // Comment récupérer le nom de l'image sans l'extension que je veux modifier (webp)
+        // récupeer une image avatar de 300px de large max
+        $image->save($assetsUrl."img/$entity/".$newImgName.".webp", IMAGETYPE_WEBP);
+        // opération suivante  : la meme chose mais avec une miniature de 50px de width
+        // uploadée dans le dossier thumbnail
+        $image->resizeToWidth($widthMin);
+        $image->save($assetsUrl."img/$entity/thumbnail/".$newImgName.".webp", IMAGETYPE_WEBP);
+        // dernière étape  : supprimer l'image originale d'uplaod devenue inutile
+        unlink($assetsUrl."upload/" . $files['name']);
+        // fin de ma function 
+        // je teste avant d'en faire une fonction
+}
