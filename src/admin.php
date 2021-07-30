@@ -8,7 +8,7 @@ if(isset($_GET['sort'])){
     $order = "";
 }
 if (!isset($_SESSION['role']) || $_SESSION['role'] === "ROLE_USER") {
-    header("Location: ../index.php");
+    header("Location: ./index.php");
 }
 $query = $pdo->prepare("SELECT * FROM user".$order);
 $query->execute();

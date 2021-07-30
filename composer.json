@@ -1,0 +1,20 @@
+{
+    "name": "julien/produit",
+    "description": "Ce projet blablablabla",
+    "type": "projet",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Julien\\Produit\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JulienTouchard",
+            "email": "julien.touchard@free.fr"
+        }
+    ],
+    "require": {
+        "gumlet/php-image-resize": "^2.0"
+    }
+}

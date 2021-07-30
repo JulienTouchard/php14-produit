@@ -1,4 +1,6 @@
 <?php
+require('../../vendor/autoload.php');
+use \Gumlet\ImageResize;
 require('func.php');
 require('pdo.php');
 
@@ -12,7 +14,7 @@ if (!empty($_POST['submitted'])) {
     //$errors = validText($errors, $_POST['pwd'], 'pwd', 8, 15);
     // utilisation des regex
     $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W])[A-Za-z0-9\W]{8,15}$/";
-    if(!preg_match($pattern,$_POST['pwd'])){
+    if (!preg_match($pattern, $_POST['pwd'])) {
         $errors['pwd'] = "Votre mot de pass n'est pas conforme";
     }
     $errors = validText($errors, $_POST['name'], 'name', 5, 10);
@@ -26,14 +28,14 @@ if (!empty($_POST['submitted'])) {
     if ($_FILES['avatar']['size'] === 0) {
         $errors['avatar'] = "Image obligatoire";
     } else {
-        $tabTypImg = ["image/jpg","image/jpeg","image/png","image/webp"];
+        $tabTypImg = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
         $boolImg = false;
-        for ($i=0; $i <count($tabTypImg) ; $i++) { 
-            if($_FILES['avatar']['type'] === $tabTypImg[$i]){
+        for ($i = 0; $i < count($tabTypImg); $i++) {
+            if ($_FILES['avatar']['type'] === $tabTypImg[$i]) {
                 $boolImg = true;
             }
         }
-        $boolImg ? : $errors['avatar'] = "Le format n'est pas bon";
+        $boolImg ?: $errors['avatar'] = "Le format n'est pas bon";
 
         /* if ($_FILES['avatar']['type'] === "image/jpg" || $_FILES['avatar']['type'] === "image/jpeg" || $_FILES['avatar']['type'] === "image/png" || $_FILES['avatar']['type'] === "image/webp") {
             //success
@@ -53,13 +55,19 @@ if (!empty($_POST['submitted'])) {
     $query->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
     $query->execute();
     $result = $query->fetch();
-    if($result){
+    if ($result) {
         $errors['double'] = "Cet email est déjà enregistré";
     }
 
     if (count($errors) === 0) {
         //hash password
-        $pwd = password_hash($_POST['pwd'],PASSWORD_ARGON2I);
+        $pwd = password_hash($_POST['pwd'], PASSWORD_ARGON2I);
+        // definir un nouveau nom d'image en webp
+        $newImgName = explode(".",$_FILES['avatar']['name']);
+        // $newImgName[0] => nom de mon image
+        // $newImgName[1] => son extension
+        $newImgName = $newImgName[0];
+
         // traitement pdo
         $sql = "INSERT INTO user (email,pwd,name,avatar,created_at,role)
         VALUES (:email,:pwd,:name,:avatar,NOW(),'ROLE_USER')";
@@ -67,25 +75,30 @@ if (!empty($_POST['submitted'])) {
         $query->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
         $query->bindValue(':pwd', $pwd, PDO::PARAM_STR);
         $query->bindValue(':name', $_POST['name'], PDO::PARAM_STR);
-        $query->bindValue(':avatar', "./asset/upload/" . $_FILES['avatar']['name'], PDO::PARAM_STR);
+        $query->bindValue(':avatar', $newImgName.".webp", PDO::PARAM_STR);
 
         $query->execute();
-        
+
         if (!is_dir("../asset/upload")) {
             mkdir("../asset/upload");
         }
         move_uploaded_file($_FILES['avatar']['tmp_name'], "../asset/upload/" . $_FILES['avatar']['name']);
+        // pour redimensionner mon image j'utilise mon bundle gumlet/php-image-resize
+        $image = new ImageResize("../asset/upload/" . $_FILES['avatar']['name']);
+        $image->resizeToWidth(300);
+        // Comment récupérer le nom de l'image sans l'extension que je veux modifier (webp)
+        // récupeer une image avatar de 300px de large max
+        $image->save('../asset/img/avatar/'.$newImgName.".webp", IMAGETYPE_WEBP);
         // tout c'est bien passé
         $_SESSION['name'] = $_POST['name'];
         $_SESSION['avatar'] = "./asset/upload/" . $_FILES['avatar']['name'];
         $_SESSION['role'] = 'ROLE_USER';
-        
-        header("Location: ../index.php");
 
+        header("Location: ../index.php");
     } else {
         // tout ne s'est pas bien passé
         $_POST['pwd'] = "";
-        header("Location: ../registration.php?errors=".serialize($errors)."&data=".serialize($_POST));
+        header("Location: ../registration.php?errors=" . serialize($errors) . "&data=" . serialize($_POST));
     }
     debug($_FILES);
     debug($errors);

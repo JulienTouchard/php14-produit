@@ -50,6 +50,24 @@ header nav ul li {display: inline-block;margin: 0 10px;}
     border-radius: 4px;
     margin-bottom: 1rem;
 }
+table{
+    max-width: 80vw;
+}
 #allUsers, #allUsers tbody,#allUsers tr{
     min-width: 100%;
+}
+.card{
+    margin: 2rem auto;
+    max-width: 60vw;
+}
+.headerImg img{
+    width: 100%;
+}
+.cardTitle{
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-align: center;
+}
+.cardText{
+    text-align: center;
 }

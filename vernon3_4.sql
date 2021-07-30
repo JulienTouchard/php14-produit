@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mer. 28 juil. 2021 à 13:50
+-- Généré le :  jeu. 29 juil. 2021 à 10:16
 -- Version du serveur :  10.4.10-MariaDB
 -- Version de PHP :  7.4.15
 
@@ -25,6 +25,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `produit`
+--
+
+DROP TABLE IF EXISTS `produit`;
+CREATE TABLE IF NOT EXISTS `produit` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL,
+  `price` int(10) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `user`
 --
 
@@ -38,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `created_at` datetime NOT NULL,
   `role` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `user`
@@ -46,7 +62,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `email`, `pwd`, `name`, `avatar`, `created_at`, `role`) VALUES
 (2, 'admin@admin.com', '$argon2i$v=19$m=65536,t=4,p=1$MktKY29JeHh5MUwwVXNvbw$WNpm5t95NbUw7IlEhHeJb8CArEV0+FKJJcKJRrWQBGM', 'admin', './asset/upload/coverDeadPrez.jpg', '2021-07-27 16:17:49', 'ROLE_ADMIN'),
-(3, 'azerty@azerty.com', '$argon2i$v=19$m=65536,t=4,p=1$aGlodU5XSDlBaloyMmZXUw$oJZ/KiFFLIVw6CzWZCtYX2CDoYHSmiODwEhboUX8oN4', 'azerty', './asset/upload/coverSoulOf.jpg', '2021-07-28 15:23:31', 'ROLE_USER');
+(4, 'azerty@azerty.com', '$argon2i$v=19$m=65536,t=4,p=1$OVZvQmZHZ2M3SFhCNE5CYQ$Jq4Xl7I5jpXLDn5NIXPdm4QoFo3hNx5xiTH4Cm2cfIc', 'azerty', './asset/upload/coverPharcyde.jpg', '2021-07-29 08:58:34', 'ROLE_USER'),
+(5, 'azerty1@azerty.com', '$argon2i$v=19$m=65536,t=4,p=1$eEE5ZzVxcHZLNE9aRGg5Qw$BlVIEEr+2FKVlsYGyA3HjWEHCiWWoBmIEjJgeqO4Ac4', 'azerty', './asset/upload/coverDeadPrez.jpg', '2021-07-29 12:01:41', 'ROLE_USER'),
+(6, 'azerty2@azerty.com', '$argon2i$v=19$m=65536,t=4,p=1$VHhkWlpmMXMvZkQuMmw2cg$F+oYX9niFQVB5qoJGSU271h6t2bQN0f38D+KmfGX4d8', 'aeztzetzet', './asset/upload/coverSoulOf.jpg', '2021-07-29 12:08:56', 'ROLE_USER');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
