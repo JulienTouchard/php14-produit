@@ -43,20 +43,21 @@ if (!empty($_POST['submitted'])) {
     }
     
     if (count($errors) === 0) {
+        $newImgName = explode(".",$_FILES['avatar']['img']);
+
+        $newImgName = $newImgName[0];
         // traitement pdo
 
         $sql = "INSERT INTO produit (name,img,price,description)
         VALUES (:name,:img,:price,:description)";
         $query = $pdo->prepare($sql);
         $query->bindValue(':name', $_POST['name'], PDO::PARAM_STR);
-        $query->bindValue(':img', "./asset/upload/" . $_FILES['img']['name'], PDO::PARAM_STR);
+        $query->bindValue(':img', $newImgName, PDO::PARAM_STR);
         $query->bindValue(':price', $_POST['prix'], PDO::PARAM_INT);
         $query->bindValue(':description', $_POST['description'], PDO::PARAM_STR);
         $query->execute();
         
-        if (!is_dir("../asset/upload")) {
-            mkdir("../asset/upload");
-        }
+
         move_uploaded_file($_FILES['img']['tmp_name'], "../asset/upload/" . $_FILES['img']['name']);
         imageManager( 
             $_FILES['img'],

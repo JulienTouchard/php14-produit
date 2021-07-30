@@ -63,6 +63,8 @@ if (!empty($_POST['submitted'])) {
         // verification du changement d'image
         if ($boolImg) {
             $imgUrl = "./asset/upload/" . $_FILES['img']['name'];
+            $newImgName = explode(".",$_FILES['avatar']['img']);
+            $imgUrl = $newImgName[0];
         } else {
             $imgUrl = $result['img'];
         }
