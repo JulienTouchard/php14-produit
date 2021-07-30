@@ -65,10 +65,8 @@ function imageManager( $files,$assetsUrl,$widthMax,$widthMin,$entity,$image){
         // la logique de ma fonction
         $newImgName = explode(".",$files['name']);
         $newImgName = $newImgName[0];
-        if (!is_dir($assetsUrl."upload")) {
-            mkdir($assetsUrl."upload");
-        }
-        move_uploaded_file($files['tmp_name'], $assetsUrl."upload/" . $files['name']);
+        
+        
         // pour redimensionner mon image j'utilise mon bundle gumlet/php-image-resize
         $image->resizeToWidth($widthMax);
         // Comment récupérer le nom de l'image sans l'extension que je veux modifier (webp)

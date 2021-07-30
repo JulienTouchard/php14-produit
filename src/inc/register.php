@@ -77,8 +77,8 @@ if (!empty($_POST['submitted'])) {
         $query->bindValue(':name', $_POST['name'], PDO::PARAM_STR);
         $query->bindValue(':avatar', $newImgName.".webp", PDO::PARAM_STR);
         $query->execute();
-
-
+        //
+        move_uploaded_file($_FILES['avatar']['tmp_name'], "../asset/upload/" . $_FILES['avatar']['name']);
         imageManager( 
             $_FILES['avatar'],
             "../asset/",
