@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require('../inc/func.php');
 require('../inc/pdo.php');
 include('./headerBack.php');

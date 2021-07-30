@@ -6,6 +6,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] === "ROLE_USER") {
 }
 require('../inc/func.php');
 require('../inc/pdo.php');
+require('../../vendor/autoload.php');
+use \Gumlet\ImageResize;
 
 if (!empty($_POST['submitted'])) {
     $errors = [];
@@ -56,6 +58,14 @@ if (!empty($_POST['submitted'])) {
             mkdir("../asset/upload");
         }
         move_uploaded_file($_FILES['img']['tmp_name'], "../asset/upload/" . $_FILES['img']['name']);
+        imageManager( 
+            $_FILES['img'],
+            "../asset/",
+            500,
+            50,
+            "produit",
+            new ImageResize("../asset/upload/" . $_FILES['img']['name'])
+        );
         header("Location: ./produits.php");
 
     } else {

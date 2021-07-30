@@ -1,12 +1,15 @@
 <?php
 session_start();
-require_once("../inc/pdo.php");
-require_once("../inc/func.php");
 // protection de la page
 if (!isset($_SESSION['role']) || $_SESSION['role'] === "ROLE_USER") {
     header("Location: ../index.php");
     die;
 }
+require_once("../inc/pdo.php");
+require_once("../inc/func.php");
+require('../../vendor/autoload.php');
+use \Gumlet\ImageResize;
+
 
 if (!empty($_POST['submitted'])) {
     // creation du tableau d'erreur
@@ -80,6 +83,14 @@ if (!empty($_POST['submitted'])) {
                 mkdir("../asset/upload");
             }
             move_uploaded_file($_FILES['img']['tmp_name'], "../asset/upload/" . $_FILES['img']['name']);
+            imageManager( 
+                $_FILES['img'],
+                "../asset/",
+                500,
+                50,
+                "produit",
+                new ImageResize("../asset/upload/" . $_FILES['img']['name'])
+            );
             // tout c'est bien passé
         }
         header("Location: ./produits.php");

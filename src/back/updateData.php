@@ -1,5 +1,8 @@
 <?php
 session_start();
+require('../../vendor/autoload.php');
+use \Gumlet\ImageResize;
+
 require_once("../inc/pdo.php");
 require_once("../inc/func.php");
 // protection de la page
@@ -65,7 +68,8 @@ if (!empty($_POST['submitted'])) {
         
         // verification du changement d'image
         if ($boolImg) {
-            $imgUrl = "./asset/upload/" . $_FILES['avatar']['name'];
+            $newImgName = explode(".",$_FILES['avatar']['name']);
+            $imgUrl = $newImgName[0];
         } else {
             $imgUrl = $result['avatar'];
         }
@@ -82,11 +86,16 @@ if (!empty($_POST['submitted'])) {
         $query->execute();
 
         if ($boolImg) {
-            if (!is_dir("../asset/upload")) {
-                mkdir("../asset/upload");
-            }
+
             move_uploaded_file($_FILES['avatar']['tmp_name'], "../asset/upload/" . $_FILES['avatar']['name']);
-            // tout c'est bien passé
+            imageManager( 
+                $_FILES['avatar'],
+                "../asset/",
+                300,
+                50,
+                "avatar",
+                new ImageResize("../asset/upload/" . $_FILES['avatar']['name'])
+            );
         }
         header("Location: ../admin.php");
     } else {

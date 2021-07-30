@@ -44,5 +44,5 @@ $i = 0;
     <?php
         $i++;
     endwhile;
-
+    var_dump($_SERVER);
     include_once("./inc/footer.php");
